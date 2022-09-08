@@ -12,11 +12,11 @@ const router = createRouter({
             component: HelloWorld
         },
         {
-            path: '/manga_list',
+            path: '/mangaList',
             component: MangaList
         },
         {
-            path: '/manga/:manga_id',
+            path: '/manga/:mangaId',
             component: MangaDetail
         },
         {

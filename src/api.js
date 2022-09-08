@@ -23,7 +23,7 @@ export class BmApi {
         })
     }
 
-    static getMangaEps(mangaId) {
+    static getMangaDetail(mangaId) {
         return instance.request({
             method: 'GET',
             url: `/api/bm/${mangaId}`

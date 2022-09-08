@@ -2,7 +2,7 @@
     <!--  <img alt="Vue logo" src="./assets/logo.png">-->
     <!--  <HelloWorld msg="Welcome to Your Vue.js App"/>-->
     <div id="app">
-        <h1>Hello App!</h1>
+        <h1>PIHUB</h1>
         <p>
             <!--使用 router-link 组件进行导航 -->
             <!--通过传递 `to` 来指定链接 -->
@@ -46,5 +46,11 @@
         text-align: center;
         color: #2c3e50;
         margin-top: 60px;
+    }
+
+    .main_content{
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
     }
 </style>
