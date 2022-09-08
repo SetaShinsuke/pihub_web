@@ -9,10 +9,17 @@ let instance = axios.create({
 })
 
 export class BmApi {
-    static getMangaReplies(epId) {
+    static getMangaReplies(epId, args) {
+        let params = {}
+        if (args) {
+            ['page', 'page_size', 'sort'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
         return instance.request({
             method: 'GET',
-            url: '/api/bm_reply?ep_id=' + epId
+            url: '/api/bm_reply?ep_id=' + epId,
+            params: params
         })
     }
 

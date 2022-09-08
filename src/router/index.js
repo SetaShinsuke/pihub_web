@@ -1,7 +1,8 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import HelloWorld from "@/components/HelloWorld.vue";
 import MangaDetail from "@/page/bm/MangaDetail.vue";
-// import MangaReplies from "@/page/bm/MangaReplies.vue";
+import MangaList from "@/page/bm/MangaList.vue";
+import MangaReplies from "@/page/bm/MangaReplies.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -11,16 +12,16 @@ const router = createRouter({
             component: HelloWorld
         },
         {
-            path: '/manga_detail',
+            path: '/manga_list',
+            component: MangaList
+        },
+        {
+            path: '/manga/:manga_id',
             component: MangaDetail
-        // },
-        // {
-        //     path: '/manga/:manga_id',
-        //     component: MangaDetail
-        // },
-        // {
-        //     path: '/bm_ep/:ep_id/replies',
-        //     component: MangaReplies
+        },
+        {
+            path: '/bm_ep/:epId/replies',
+            component: MangaReplies
         }
     ]
 })
