@@ -13,9 +13,13 @@
     <!-- 章节目录 -->
     <div class="main_content" style="text-align: left">
         <div class="ep_item" v-for="ep in epList" :key="ep.ep_id">
-            <el-button v-on:click="onEpBtnClick(ep.ep_id)" class="ep_btn" :title="ep.ep_name">
+            <el-link class="ep_btn" :title="ep.ep_name"
+                     :underline="false"
+                     :href="getEpUrl(ep.ep_id)"
+                     @click="onEpBtnClick(ep.ep_id)"
+            >
                 {{ep.ep_name}}
-            </el-button>
+            </el-link>
         </div>
     </div>
 </template>
@@ -28,7 +32,7 @@
         data() {
             return {
                 mangaId: this.$route.params.mangaId,
-                mangaName: 'Manga Cover',
+                mangaName: 'Manga Name',
                 mangaIntro: '',
                 coverUrl: '',
                 authors: [],
@@ -47,8 +51,12 @@
                     this.epList = resp.data.ep_list
                 })
             },
+            getEpUrl(epId) {
+                var path = `/manga/${this.mangaId}/ep/${epId}/replies`
+                return (window.location.href + '').replace(/\/#.*/, '/#' + path)
+            },
             onEpBtnClick(epId) {
-                this.$router.push(`/bm_ep/${epId}/replies`)
+                this.$router.push(`/manga/${this.mangaId}/ep/${epId}/replies`)
             }
         },
         mounted() {
@@ -73,7 +81,8 @@
         padding-left: 28px;
         vertical-align: top;
         font-weight: 400;
-        max-width: 800px;
+        max-width: 610px;
+        overflow: hidden;
     }
 
     .intro_text {

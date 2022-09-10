@@ -12,7 +12,7 @@ const router = createRouter({
             component: HelloWorld
         },
         {
-            path: '/mangaList',
+            path: '/manga',
             component: MangaList
         },
         {
@@ -20,7 +20,7 @@ const router = createRouter({
             component: MangaDetail
         },
         {
-            path: '/bm_ep/:epId/replies',
+            path: '/manga/:mangaId/ep/:epId/replies',
             component: MangaReplies
         }
     ]
