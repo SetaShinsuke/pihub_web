@@ -8,6 +8,10 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes: [
         {
+            path: '/',
+            component: MangaList
+        },
+        {
             path: '/hello',
             component: HelloWorld
         },
@@ -23,7 +27,11 @@ const router = createRouter({
             path: '/manga/:mangaId/ep/:epId/replies',
             component: MangaReplies
         }
-    ]
+    ],
+    scrollBehavior() {
+        // always scroll to top
+        return { top: 0 }
+    }
 })
 
 export default router

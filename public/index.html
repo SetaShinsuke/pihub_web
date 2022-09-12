@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="" id="rootDoc">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,11 +9,32 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
-  <body>
+<!--  <div style="width: 100px; height: 909px; background: red; position: fixed;top: 0;z-index: 200"></div>-->
+  <body id="rootBody">
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
+    <div id="app" style="overflow-y: hidden"></div>
     <!-- built files will be auto injected -->
   </body>
+<style>
+  html{
+    /*height: 100vh;*/
+    /*overflow-y: scroll;*/
+  }
+
+  /*html,*/
+  body{
+    /*height: 100vh;*/
+    /*overflow-y: scroll;*/
+    /*overflow-y: hidden;*/
+    /*position: fixed;*/
+    /*overflow-y: visible;*/
+  }
+
+  #app{
+    /*height: 100%;*/
+    /*overflow: hidden;*/
+  }
+</style>
 </html>

@@ -7,9 +7,9 @@ module.exports = defineConfig({
     outputDir: 'dist', // default: 'dist'
     assetsDir: 'assets', // default: ''
     indexPath: 'index.html', // default: 'index.html'
-    // devServer: {
-    //   proxy: 'http://192.168.50.96:9292'
-    // }
+    devServer: {
+      proxy: 'http://192.168.50.166:9292'
+    }
 })
 
 console.log(`${getPublicPath()}`)

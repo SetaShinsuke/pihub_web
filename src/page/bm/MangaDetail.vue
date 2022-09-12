@@ -1,6 +1,6 @@
 <template>
     <p>Manga Detail</p>
-    <div class="manga_detail main_content" style="text-align: left">
+    <div class="manga_detail main-content" style="text-align: left">
         <div class="manga_info">
             <img :src="coverUrl" :alt="mangaName" class="manga_cover">
             <div class="manga_intro" style="text-align: left">
@@ -11,13 +11,12 @@
         </div>
     </div>
     <!-- 章节目录 -->
-    <div class="main_content" style="text-align: left">
+    <div class="main-content" style="text-align: center">
         <div class="ep_item" v-for="ep in epList" :key="ep.ep_id">
             <el-link class="ep_btn" :title="ep.ep_name"
                      :underline="false"
-                     :href="getEpUrl(ep.ep_id)"
-                     @click="onEpBtnClick(ep.ep_id)"
-            >
+                     :href="getEpUrl(ep.ep_id)">
+<!--                     @click="onEpBtnClick(ep.ep_id)">-->
                 {{ep.ep_name}}
             </el-link>
         </div>

@@ -1,5 +1,6 @@
 <template>
-    <div id="app">
+<!--    <el-backtop style="right: 5%; bottom: 5%; z-index: 500" target="#rootBody"/>-->
+    <div id="app" class="wrapper">
         <el-menu
                 :default-active="activeIndex"
                 :router="false"
@@ -29,7 +30,7 @@
         <!--        </p>-->
         <!-- 路由出口 -->
         <!-- 路由匹配到的组件将渲染在这里 -->
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
     </div>
 </template>
 
@@ -38,7 +39,8 @@
     export default {
         data() {
             return {
-                activeIndex: '1'
+                activeIndex: '1',
+                logMsg: ''
             }
         },
         methods: {
@@ -46,15 +48,19 @@
             handleSelect(key, keyPath) {
                 console.log(`key: ${key}, keyPath: ${keyPath}`)
                 this.$router.push(`/manga/${key}`)
+            },
+            onHashChange(){
+                var currentPath = window.location.hash.slice(1); // 获取输入的路由
+                if (this.$router.path !== currentPath) {
+                    this.$router.push(currentPath) // 动态跳转
+                }
             }
         },
         mounted() {
-            window.addEventListener('hashchange', () => {
-                var currentPath = window.location.hash.slice(1); // 获取输入的路由
-                if (this.$router.path !== currentPath) {
-                    this.$router.push(currentPath); // 动态跳转
-                }
-            }, false);
+            window.addEventListener('hashchange', this.onhashchange, false)
+        },
+        unmounted(){
+            window.removeEventListener('hashchange', this.onHashChange)
         }
     }
 </script>
@@ -66,16 +72,38 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-        /*margin-top: 60px;*/
+        /*height: 100%;*/
+        /*overflow-y: scroll;*/
+        /*overflow-y: visible;*/
+        /*-webkit-overflow-scrolling: touch;*/
     }
 
     .flex-grow {
         flex-grow: 1;
     }
 
-    .main_content {
+    .print-console {
+        width: 40%;
+        height: 200px;
+        background: #2c3e50;
+        opacity: 0.8;
+        color: white;
+        position: fixed;
+        bottom: 3%;
+        right: 3%;
+        overflow: auto;
+        padding: 20px;
+        font-size: 16px;
+        text-align: left;
+        z-index: 100;
+        white-space: pre;
+    }
+
+    .main-content {
         max-width: 1000px;
         margin: 0 auto;
         padding: 0 20px;
+        padding-bottom: 20px;
+        position: relative;
     }
 </style>

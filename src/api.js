@@ -1,12 +1,24 @@
 import axios from "axios";
 
-let HOST = 'http://192.168.50.96:9292';
+// let HOST = 'http://192.168.50.166:9292';
+let HOST = getHost();
 
 export {HOST}
 
 let instance = axios.create({
     baseURL: HOST
 })
+
+function getHost() {
+    switch (process.env.NODE_ENV) {
+        case 'production':
+            return window.location.orgin
+        case 'dev':
+            return 'http://192.168.50.166:9292'
+        default:
+            return 'http://192.168.50.166:9292'
+    }
+}
 
 export class BmApi {
     static getMangaReplies(epId, args) {
