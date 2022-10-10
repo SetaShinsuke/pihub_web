@@ -126,8 +126,8 @@
             isIpad() {
                 var isIpad = (navigator.platform === 'iPad')
                 console.log(`isIpad: ${isIpad}`)
-                return isIpad
-                // return false
+                // return isIpad
+                return true
             },
             bodyHeight() {
                 return document.body.offsetHeight

@@ -1,5 +1,5 @@
 <template>
-<!--    <el-backtop style="right: 5%; bottom: 5%; z-index: 500" target="#rootBody"/>-->
+    <!--    <el-backtop style="right: 5%; bottom: 5%; z-index: 500" target="#rootBody"/>-->
     <div id="app" class="wrapper">
         <el-menu
                 :default-active="activeIndex"
@@ -14,12 +14,17 @@
                 <span style="font-weight: bold; line-height: 50px; vertical-align: middle">PIHUB</span>
             </div>
             <div class="flex-grow"/>
-            <el-sub-menu index="1" :router="true">
+            <el-sub-menu index="manga" :router="true">
                 <template #title>Manga</template>
                 <el-menu-item index="25539">全职猎人</el-menu-item>
                 <el-menu-item index="30221">黑白无双</el-menu-item>
                 <el-menu-item index="28376" disabled title="删了一干净">Chainsaw Man</el-menu-item>
                 <el-menu-item index="25712">Level E</el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="games" :router="true">
+                <template #title>Games</template>
+                <el-menu-item index="xgp">XGP</el-menu-item>
+                <el-menu-item index="hl2b" disabled>HowLongToBeat</el-menu-item>
             </el-sub-menu>
             <el-menu-item index="2" disabled>Others</el-menu-item>
         </el-menu>
@@ -47,9 +52,14 @@
             // keypath: 带有层级的完整key'
             handleSelect(key, keyPath) {
                 console.log(`key: ${key}, keyPath: ${keyPath}`)
-                this.$router.push(`/manga/${key}`)
+                switch (keyPath[0]) {
+                    case 'manga':
+                    case 'games':
+                        this.$router.push(`/${keyPath[0]}/${key}`)
+                        break
+                }
             },
-            onHashChange(){
+            onHashChange() {
                 var currentPath = window.location.hash.slice(1); // 获取输入的路由
                 if (this.$router.path !== currentPath) {
                     this.$router.push(currentPath) // 动态跳转
@@ -59,7 +69,7 @@
         mounted() {
             window.addEventListener('hashchange', this.onhashchange, false)
         },
-        unmounted(){
+        unmounted() {
             window.removeEventListener('hashchange', this.onHashChange)
         }
     }
@@ -102,8 +112,9 @@
     .main-content {
         max-width: 1000px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 1%;
         padding-bottom: 20px;
         position: relative;
     }
+
 </style>

@@ -42,3 +42,18 @@ export class BmApi {
         })
     }
 }
+
+export class GameApi {
+    static getXgpLists(channels, platform, withDesc = false){
+        let params = {
+            channels: channels,
+            platform: platform,
+            with_desc: withDesc
+        }
+        return instance.request({
+            method: 'GET',
+            url: '/api/xgp/list',
+            params: params
+        })
+    }
+}

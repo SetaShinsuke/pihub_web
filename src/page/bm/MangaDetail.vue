@@ -1,5 +1,5 @@
 <template>
-    <p>Manga Detail</p>
+    <p style="display: none">Manga Detail</p>
     <div class="manga_detail main-content" style="text-align: left">
         <div class="manga_info">
             <img :src="coverUrl" :alt="mangaName" class="manga_cover">
@@ -44,7 +44,7 @@
                     var info = resp.data.info
                     this.mangaId = info.comic_id
                     this.mangaName = info.title
-                    this.coverUrl = info.cover_portrait
+                    this.coverUrl = `${info.cover_portrait}@310w.jpg`
                     this.authors = info.authors.join(', ')
                     this.mangaIntro = info.introduction
                     this.epList = resp.data.ep_list
