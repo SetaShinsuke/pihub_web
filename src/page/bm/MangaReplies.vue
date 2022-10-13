@@ -102,7 +102,7 @@
 </template>
 
 <script>
-    import {BmApi} from "@/api.js";
+    import {MangaApi} from "@/api.js";
     import {scrollIntoView} from "seamless-scroll-polyfill";
 
     export default {
@@ -182,7 +182,7 @@
                     sort: this.sort
                 }
                 this.loading = true
-                BmApi.getMangaReplies(this.epId, data).then(resp => {
+                MangaApi.getMangaReplies(this.epId, data).then(resp => {
                     this.total = resp.data.total
                     this.total_nest = resp.data.total_nest
                     if (doAppend) {

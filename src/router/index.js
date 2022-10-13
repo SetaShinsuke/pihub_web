@@ -4,6 +4,7 @@ import MangaDetail from "@/page/bm/MangaDetail.vue";
 import MangaList from "@/page/bm/MangaList.vue";
 import MangaReplies from "@/page/bm/MangaReplies.vue";
 import XgpList from "@/page/games/XgpList.vue";
+import MangaSearch from "@/page/bm/MangaSearch.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -21,6 +22,10 @@ const router = createRouter({
             component: MangaList
         },
         {
+            path: '/manga/search',
+            component: MangaSearch
+        },
+        {
             path: '/manga/:mangaId',
             component: MangaDetail
         },
@@ -35,7 +40,7 @@ const router = createRouter({
     ],
     scrollBehavior() {
         // always scroll to top
-        return { top: 0 }
+        return {top: 0}
     }
 })
 

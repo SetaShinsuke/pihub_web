@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import {BmApi} from "@/api.js";
+    import {MangaApi} from "@/api.js";
 
     export default {
         name: "MangaDetail",
@@ -40,7 +40,7 @@
         },
         methods: {
             loadMangaDetail() {
-                BmApi.getMangaDetail(this.mangaId).then(resp => {
+                MangaApi.getMangaDetail(this.mangaId).then(resp => {
                     var info = resp.data.info
                     this.mangaId = info.comic_id
                     this.mangaName = info.title

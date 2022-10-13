@@ -20,7 +20,35 @@ function getHost() {
     }
 }
 
-export class BmApi {
+export class MangaApi {
+    static getSubscribedMangas(args) {
+        let params = {}
+        if (args) {
+            ['page', 'page_size', 'sort'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'GET',
+            url: '/api/mangas/subscribed',
+            params: params
+        })
+    }
+
+    static subscribeBm(bmId, args) {
+        let params = {bm_id: bmId}
+        if (args) {
+            ['title', 'cover', 'authors', 'introduction', 'do_subscribe', 'do_pin'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'POST',
+            url: '/api/mangas/subscribe/bm',
+            params: params
+        })
+    }
+
     static getMangaReplies(epId, args) {
         let params = {}
         if (args) {
@@ -44,7 +72,7 @@ export class BmApi {
 }
 
 export class GameApi {
-    static getXgpLists(channels, platform, withDesc = false){
+    static getXgpLists(channels, platform, withDesc = false) {
         let params = {
             channels: channels,
             platform: platform,
