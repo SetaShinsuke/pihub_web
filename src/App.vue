@@ -16,6 +16,7 @@
             <div class="flex-grow"/>
             <el-sub-menu index="manga" :router="true">
                 <template #title>Manga</template>
+                <el-menu-item index="0">查看全部</el-menu-item>
                 <el-menu-item index="25539">全职猎人</el-menu-item>
                 <el-menu-item index="30221">黑白无双</el-menu-item>
                 <el-menu-item index="28376" disabled title="删了一干净">Chainsaw Man</el-menu-item>
@@ -55,6 +56,10 @@
                 switch (keyPath[0]) {
                     case 'manga':
                     case 'games':
+                        if(key === '0'){
+                            this.$router.push(`/${keyPath[0]}`)
+                            break
+                        }
                         this.$router.push(`/${keyPath[0]}/${key}`)
                         break
                 }

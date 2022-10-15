@@ -5,9 +5,11 @@
             v-model="isSearching"
             title="搜索漫画"
             direction="ttb"
+            :close-on-press-escape="false"
             :before-close="onSearchClose"
-            size="600px"
-    >
+            @opened="onDrawerOpen"
+            size="600px">
+        <!--todo: 按 bm_id 搜索-->
         <div>
             <el-input
                     ref="searchInput"
@@ -15,14 +17,13 @@
                     class="search-input"
                     @keyup.enter="onSearchClick"
                     placeholder="请输入关键词"
-                    clearable
-            >
+                    clearable>
                 <template #append>
                     <el-button icon="Search" @click="onSearchClick"/>
                 </template>
             </el-input>
         </div>
-
+        <!-- 搜索列表 -->
         <div class="search-result">
             <div class="manga-item" v-for="mangaItem in searchResults" :key="mangaItem.bm_id">
                 <el-card class="manga-card" :body-style="{padding: '0px'}"
@@ -34,7 +35,7 @@
                                  :href="getStoreUrl(mangaItem.bm_id)"
                                  :title="mangaItem.title"
                                  target="_blank">
-                            {{mangaItem.title}}
+                            {{mangaItem.title.substring(0, 9)}}
                         </el-link>
                         <el-popconfirm title="确定添加到订阅吗?"
                                        width="200px"
@@ -42,7 +43,7 @@
                                        @confirm="onSubscribe(mangaItem, true)">
                             <template #reference>
                                 <el-icon class="option-icon">
-                                    <MoreFilled/>
+                                    <Plus/>
                                 </el-icon>
                             </template>
                         </el-popconfirm>
@@ -63,7 +64,7 @@
                                  :href="getStoreUrl(mangaItem.bm_id)"
                                  :title="mangaItem.title"
                                  target="_blank">
-                            {{mangaItem.title}}
+                            {{mangaItem.title.substring(0, 9)}}
                         </el-link>
                         <el-popconfirm title="确定取消订阅吗?"
                                        width="200px"
@@ -132,6 +133,7 @@
                 MangaApi.subscribeBm(manga.bm_id, args).then(resp => {
                     console.log(`Subscribed size: ${resp.data.manga}`)
                     this.loadMangas(1)
+                    this.isSearching = false
                     ElMessage({
                         message: `${doSubscribe?"订阅":"退订"}成功!`,
                         type: 'success',
@@ -141,6 +143,9 @@
             onAddClick() {
                 // this.$router.push(`/manga/search`)
                 this.isSearching = true
+            },
+            onDrawerOpen(){
+                this.$refs.searchInput.focus()
             },
             search(keyword) {
                 console.log(`Search: ${keyword}`)
@@ -190,14 +195,17 @@
     .manga-card {
         height: 0;
         padding-bottom: 162%;
-        text-align: center;
+        text-align: left;
         position: relative;
     }
 
     .manga-card-title {
         font-size: 14px;
-        margin: 2px 4px 2px 4px;
+        margin: 3% 6% 3% 6%;
+        /*max-lines: 1;*/
         overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         color: #000000de;
     }
 
@@ -214,10 +222,10 @@
 
     .option-icon {
         color: #00000077;
-        font-size: 20px;
+        font-size: 16px;
         cursor: pointer;
         position: absolute;
-        right: 8px;
+        right: 6px;
         bottom: 4px;
         padding: 4px;
     }
