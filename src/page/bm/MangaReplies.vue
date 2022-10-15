@@ -127,6 +127,7 @@
                 var isIpad = (navigator.platform === 'iPad')
                 console.log(`isIpad: ${isIpad}`)
                 // return isIpad
+                // 佛了，全部都分页吧
                 return true
             },
             bodyHeight() {

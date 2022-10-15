@@ -35,6 +35,20 @@ export class MangaApi {
         })
     }
 
+    static searchManga(keyword, args){
+        let params = {keyword: keyword}
+        if(args){
+            ['platform', 'page', 'page_size'].forEach(key =>{
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'GET',
+            url: '/api/mangas/search',
+            params: params
+        })
+    }
+
     static subscribeBm(bmId, args) {
         let params = {bm_id: bmId}
         if (args) {
