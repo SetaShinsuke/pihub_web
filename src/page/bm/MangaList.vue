@@ -9,7 +9,6 @@
             :before-close="onSearchClose"
             @opened="onDrawerOpen"
             size="600px">
-        <!--todo: 按 bm_id 搜索-->
         <div>
             <el-input
                     ref="searchInput"
@@ -18,6 +17,12 @@
                     @keyup.enter="onSearchClick"
                     placeholder="请输入关键词"
                     clearable>
+                <template #prepend>
+                    <el-select v-model="searchBy" placeholder="检索方式" style="width: 115px">
+                        <el-option label="按标题" value="title"/>
+                        <el-option label="按ID" value="bm_id"/>
+                    </el-select>
+                </template>
                 <template #append>
                     <el-button icon="Search" @click="onSearchClick"/>
                 </template>
@@ -100,6 +105,7 @@
         data() {
             return {
                 isSearching: false,
+                searchBy: 'title',
                 mangaList: [],
                 searchText: '',
                 searchResults: []
@@ -118,11 +124,11 @@
                 var path = `/manga/${bmId}`
                 return (window.location.href + '').replace(/\/#.*/, '/#' + path)
             },
-            onSubscribe(manga, doSubscribe){
-                console.log(`${doSubscribe?"S":"Uns"}ubcribe manga: ${manga.title}`)
-                // todo: 订阅/退订
+            onSubscribe(manga, doSubscribe) {
+                console.log(`${doSubscribe ? "S" : "Uns"}ubcribe manga: ${manga.title}`)
+                // 订阅/退订
                 var args = {}
-                if(doSubscribe){
+                if (doSubscribe) {
                     args = {
                         title: manga.title,
                         cover: manga.cover_portrait,
@@ -135,7 +141,7 @@
                     this.loadMangas(1)
                     this.isSearching = false
                     ElMessage({
-                        message: `${doSubscribe?"订阅":"退订"}成功!`,
+                        message: `${doSubscribe ? "订阅" : "退订"}成功!`,
                         type: 'success',
                     })
                 })
@@ -144,12 +150,12 @@
                 // this.$router.push(`/manga/search`)
                 this.isSearching = true
             },
-            onDrawerOpen(){
+            onDrawerOpen() {
                 this.$refs.searchInput.focus()
             },
             search(keyword) {
-                console.log(`Search: ${keyword}`)
-                MangaApi.searchManga(keyword).then(resp => {
+                console.log(`Search: ${keyword}, search by: ${this.searchBy}`)
+                MangaApi.searchManga(keyword, {search_by: this.searchBy}).then(resp => {
                     // console.log(resp.data.list)
                     this.searchResults = resp.data.list
                 })
@@ -161,6 +167,10 @@
             },
             onSearchClose(done) {
                 // todo: 检查输入框是否为空
+                if(!this.searchText){
+                    done()
+                    return
+                }
                 ElMessageBox.confirm('确定关闭搜索吗?',
                     {
                         confirmButtonText: '关闭',

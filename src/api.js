@@ -37,8 +37,9 @@ export class MangaApi {
 
     static searchManga(keyword, args){
         let params = {keyword: keyword}
+        console.log(args)
         if(args){
-            ['platform', 'page', 'page_size'].forEach(key =>{
+            ['platform', 'page', 'page_size', 'search_by'].forEach(key =>{
                 if (key in args) params[key] = args[key]
             })
         }
