@@ -79,7 +79,7 @@
 <style scoped>
     .list-title {
         text-align: left;
-        padding: 0 20px 20px 20px
+        padding: 0 20px 0 20px
     }
 
     .list-title-text {
@@ -99,14 +99,20 @@
     }
 
     .game-item {
+        width: 40%;
+        max-width: 200px;
         display: inline-block;
         vertical-align: top;
+        padding-bottom: 10px;
     }
 
     .game-card {
-        width: 200px;
-        height: 380px;
-        margin: 10px;
+        margin: 5%;
+        height: 0;
+        padding-bottom: 170%;
+        /*width: 200px;*/
+        /*height: 380px;*/
+        /*margin: 10px;*/
     }
 
     .game-cover {

@@ -8,7 +8,21 @@ module.exports = defineConfig({
     assetsDir: 'assets', // default: ''
     indexPath: 'index.html', // default: 'index.html'
     devServer: {
-      proxy: 'http://192.168.50.166:9292'
+        // proxy: 'http://192.168.50.166:9292'
+        proxy: {
+            '/jav_prx': {
+                target: 'https://watchjavnow.xyz',
+                // target: 'http://192.168.50.166:9292',
+                ws: true, //代理websocked
+                secure: false, //target是否为https接口
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/jav_prx': ''
+                }
+            },
+            '': {target: 'http://192.168.50.166:9292'}
+            // '': {target: 'https://watchjavnow.xyz/'}
+        }
     }
 })
 
@@ -21,6 +35,7 @@ function getPublicPath() {
         case 'production':
             return '/pages'
         case 'dev':
+        case 'development':
             return '/'
         default:
             return '/'

@@ -1,10 +1,10 @@
 <template>
-    <p>Manga Search</p>
+    <p>DIO MAIN</p>
 </template>
 
 <script>
     export default {
-        name: "MangaSearch"
+        name: "DioMain"
     }
 </script>
 

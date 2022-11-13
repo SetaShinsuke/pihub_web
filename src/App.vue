@@ -11,7 +11,8 @@
                 style="margin-bottom: 20px"
         >
             <div style="text-align: center; height: 50px">
-                <span style="font-weight: bold; line-height: 50px; vertical-align: middle">PIHUB</span>
+                <span style="font-weight: bold; line-height: 50px; vertical-align: middle; cursor: pointer"
+                      @click="onLogoClick">PIHUB</span>
             </div>
             <div class="flex-grow"/>
             <el-sub-menu index="manga" :router="true">
@@ -22,18 +23,23 @@
                 <el-menu-item index="28376" disabled title="删了一干净">Chainsaw Man</el-menu-item>
                 <el-menu-item index="25712">Level E</el-menu-item>
             </el-sub-menu>
-            <el-sub-menu index="games" :router="true">
+            <el-sub-menu index="games" :router="true" v-if="false">
                 <template #title>Games</template>
                 <el-menu-item index="xgp">XGP</el-menu-item>
                 <el-menu-item index="hl2b" disabled>HowLongToBeat</el-menu-item>
             </el-sub-menu>
-            <el-menu-item index="2" disabled>Others</el-menu-item>
+            <el-sub-menu index="dio">
+                <template #title>DIO</template>
+                <el-menu-item index="main">DIO总览</el-menu-item>
+                <el-menu-item index="search">DIO搜索</el-menu-item>
+                <el-menu-item index="accounts">账号列表</el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="others" :router="true">
+                <template #title>Others</template>
+                <el-menu-item index="parser">Parser</el-menu-item>
+                <el-menu-item index="xgp">XGP</el-menu-item>
+            </el-sub-menu>
         </el-menu>
-        <!--        <p>-->
-        <!--            <router-link to="/manga">MangaList</router-link>-->
-        <!--            <br/>-->
-        <!--            <router-link to="/manga/25539/ep/267082/replies">Replies</router-link>-->
-        <!--        </p>-->
         <!-- 路由出口 -->
         <!-- 路由匹配到的组件将渲染在这里 -->
         <router-view :key="$route.fullPath"></router-view>
@@ -46,7 +52,9 @@
         data() {
             return {
                 activeIndex: '1',
-                logMsg: ''
+                logMsg: '',
+                // 在子模块中使用 this.$root.logoTitle
+                logoTitle: 'PIHUB'
             }
         },
         methods: {
@@ -56,13 +64,27 @@
                 switch (keyPath[0]) {
                     case 'manga':
                     case 'games':
-                        if(key === '0'){
+                    case 'dio':
+                        if (key === '0') {
                             this.$router.push(`/${keyPath[0]}`)
                             break
                         }
                         this.$router.push(`/${keyPath[0]}/${key}`)
                         break
+                    case 'others':
+                        switch (key) {
+                            case 'parser':
+                                this.$router.push(`/utils/book_scan_parser`)
+                                break
+                            case 'xgp':
+                                this.$router.push(`/games/xgp`)
+                                break
+                        }
+                        break
                 }
+            },
+            onLogoClick() {
+                this.$router.push('/')
             },
             onHashChange() {
                 var currentPath = window.location.hash.slice(1); // 获取输入的路由
@@ -72,7 +94,7 @@
             }
         },
         mounted() {
-            window.addEventListener('hashchange', this.onhashchange, false)
+            window.addEventListener('hashchange', this.onHashChange, false)
         },
         unmounted() {
             window.removeEventListener('hashchange', this.onHashChange)

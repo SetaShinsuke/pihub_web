@@ -7,7 +7,7 @@
     </div>
 
     <el-backtop style="right: 5%; bottom: 5%; z-index: 500"/>
-<!--    <el-backtop style="right: 5%; bottom: 5%; z-index: 500" target="#rootBody"/>-->
+    <!--    <el-backtop style="right: 5%; bottom: 5%; z-index: 500" target="#rootBody"/>-->
     <el-affix target=".main-content" :offset="80" style="display: none" @click="scrollReset">
         <el-button type="primary" style="display: inline; padding: 5px; background: dodgerblue">
             CurrentPage: {{currentPage}}
@@ -18,13 +18,26 @@
     <div class="main-content">
         <!--    <div id="wrapper" class="main-content" :style="{'overflow': 'hidden', 'height': bodyHeight, 'overflow': 'auto'}">-->
         <el-card id="repliesCard" class="box-card">
+            <el-breadcrumb separator="/" v-if="false">
+                <el-breadcrumb-item :to="{path: '/'}">首页</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{path: '/manga'}">漫画列表</el-breadcrumb-item>
+                <el-breadcrumb-item>{{epName}}</el-breadcrumb-item>
+            </el-breadcrumb>
+            <p v-if="false">{{epName}}</p>
             <el-page-header @back="goBack">
                 <template #content>
-                    <span class="text-large font-600 mr-3"> 评论 </span>
-                    <span class="text-sm mr-2"
-                          style="color: var(--el-text-color-regular);font-size: 15px">共{{total}}条</span>
-                    <!--                    <div style="display: inline-block" class="flex-grow"/>-->
-                    <!--                    <div style="display: inline-block; flex-grow: 1"></div>-->
+                    <el-tooltip
+                            :disabled="!epName"
+                            class="box-item"
+                            effect="light"
+                            :content="epName"
+                            placement="top-start">
+                        <div>
+                            <span class="text-large font-600 mr-3"> {{rootReplyId?" 评论回复 ":" 评论 "}} </span>
+                            <span class="text-sm mr-2"
+                                  style="color: var(--el-text-color-regular);font-size: 15px">共{{total}}条</span>
+                        </div>
+                    </el-tooltip>
                 </template>
             </el-page-header>
             <!-- 排序方式 -->
@@ -80,6 +93,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <el-link class="view-more" v-if="reply.reply_count>3"
+                                         :href="getMoreUrl(reply)" :underline="false">
+                                    共{{reply.reply_count}}条回复, 点击查看
+                                </el-link>
                             </div>
                         </div>
                     </div>
@@ -113,6 +130,8 @@
                 showLog: false,
                 logMsg: '',
                 epId: this.$route.params.epId,
+                rootReplyId: this.$route.params.rootReplyId,
+                epName: this.$route.query.ep_name,
                 total: 0,
                 total_nest: 0, // 楼中楼折叠后的层数
                 sort: 2, // 0: 按时间, 2: 按热度
@@ -171,6 +190,10 @@
                 }
                 this.logMsg += `\n${msg}`
             },
+            getMoreUrl(rootReply) {
+                var path = window.location.href.replace(this.$route.path, `${this.$route.path}/${rootReply.rp_id}`)
+                return path
+            },
             loadReplies(page, doAppend = false) {
                 console.log(`Load replies, page: ${page}`)
                 this.printLog(`Load replies, page: ${page}`)
@@ -181,6 +204,10 @@
                     page: page,
                     page_size: this.pageSize,
                     sort: this.sort
+                }
+                // 楼中楼
+                if (this.rootReplyId) {
+                    data.root_id = this.rootReplyId
                 }
                 this.loading = true
                 MangaApi.getMangaReplies(this.epId, data).then(resp => {
@@ -320,5 +347,10 @@
     }
 
     .reply-like {
+    }
+
+    .view-more {
+        font-size: 12px;
+        color: #6d757a;
     }
 </style>

@@ -15,8 +15,7 @@
         <div class="ep_item" v-for="ep in epList" :key="ep.ep_id">
             <el-link class="ep_btn" :title="ep.ep_name"
                      :underline="false"
-                     :href="getEpUrl(ep.ep_id)">
-<!--                     @click="onEpBtnClick(ep.ep_id)">-->
+                     :href="getEpUrl(ep)">
                 {{ep.ep_name}}
             </el-link>
         </div>
@@ -50,12 +49,9 @@
                     this.epList = resp.data.ep_list
                 })
             },
-            getEpUrl(epId) {
-                var path = `/manga/${this.mangaId}/ep/${epId}/replies`
+            getEpUrl(ep) {
+                var path = `/manga/${this.mangaId}/ep/${ep.ep_id}/replies?ep_name=${ep.ep_name}`
                 return (window.location.href + '').replace(/\/#.*/, '/#' + path)
-            },
-            onEpBtnClick(epId) {
-                this.$router.push(`/manga/${this.mangaId}/ep/${epId}/replies`)
             }
         },
         mounted() {
