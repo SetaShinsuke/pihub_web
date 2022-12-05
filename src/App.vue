@@ -33,6 +33,7 @@
                 <el-menu-item index="main">DIO总览</el-menu-item>
                 <el-menu-item index="search">DIO搜索</el-menu-item>
                 <el-menu-item index="accounts">账号列表</el-menu-item>
+                <el-menu-item index="games">游戏列表</el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="others" :router="true">
                 <template #title>Others</template>

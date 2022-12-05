@@ -101,10 +101,130 @@ export class GameApi {
             params: params
         })
     }
+
+    static getGames(args) {
+        let params = {}
+        if (args) {
+            ['platform', 'all', 'count', 'limit', 'page'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'GET',
+            url: '/api/games',
+            params: params
+        })
+    }
+
+    static addGame(args) {
+        let params = {}
+        if (args) {
+            ['sku', 'platform', 'org_name', 'name', 'cover', 'hl2b_id'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'POST',
+            url: '/api/games',
+            params: params
+        })
+    }
+
+    static getGameDetail(gameId) {
+        return instance.request({
+            method: 'GET',
+            url: `/api/games/${gameId}`
+        })
+    }
+
+    static editGame(gameId, args) {
+        let params = {}
+        if (args) {
+            ['sku', 'platform', 'org_name', 'name', 'cover', 'hl2b_id'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'PUT',
+            url: `/api/games/${gameId}`,
+            params: params
+        })
+    }
+
+    static removeGame(gameId) {
+        return instance.request({
+            method: 'DELETE',
+            url: `/api/games/${gameId}`
+        })
+    }
+}
+
+export class AcqApi {
+    static getAcqs(args) {
+        let params = {}
+        if (args) {
+            ['account_id', 'item_id', 'item_type', 'format', 'state', 'region', 'extra',
+                'price_min', 'price_max', 'price_type', 'date_start', 'date_end',
+                'all', 'count', 'limit', 'page'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'GET',
+            url: `/api/acquisitions`,
+            params: params
+        })
+    }
+
+    static addAcq(args) {
+        let params = {}
+        if (args) {
+            ['account_id', 'item_id', 'item_type', 'format',
+                'acq_price', 'org_price', 'acq_method', 'acq_from',
+                'state', 'region', 'extra'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'POST',
+            url: `/api/acquisitions`,
+            params: params
+        })
+    }
+
+    static getAcqDetail(acqId){
+        return instance.request({
+            method: 'GET',
+            url: `/api/acquisitions/${acqId}`
+        })
+    }
+
+    static editAcq(acqId, args) {
+        let params = {}
+        if (args) {
+            ['account_id', 'item_id', 'format',
+                'acq_price', 'org_price', 'acq_method', 'acq_from',
+                'state', 'region', 'extra'].forEach(key => {
+                if (key in args) params[key] = args[key]
+            })
+        }
+        return instance.request({
+            method: 'PUT',
+            url: `/api/acquisitions/${acqId}`,
+            params: params
+        })
+    }
+
+    static removeAcq(acqId){
+        return instance.request({
+            method: 'DELETE',
+            url: `/api/acquisitions/${acqId}`
+        })
+    }
 }
 
 export class DioApi {
-    static getAccounts(){
+    static getAccounts() {
         let params = {}
         return instance.request({
             method: 'GET',
@@ -113,9 +233,9 @@ export class DioApi {
         })
     }
 
-    static addAccount(args){
+    static addAccount(args) {
         let params = {}
-        if(args){
+        if (args) {
             ['uid', 'name', 'alt_level', 'platform', 'login_name', 'extra'].forEach(key => {
                 if (key in args) params[key] = args[key]
             })
@@ -127,9 +247,9 @@ export class DioApi {
         })
     }
 
-    static editAccount(id, args){
+    static editAccount(id, args) {
         let params = {}
-        if(args){
+        if (args) {
             ['uid', 'name', 'alt_level', 'platform', 'login_name', 'extra'].forEach(key => {
                 if (key in args) params[key] = args[key]
             })
@@ -140,12 +260,11 @@ export class DioApi {
             params: params
         })
     }
-    static removeAccount(id){
-        let params = {}
+
+    static removeAccount(id) {
         return instance.request({
             method: 'DELETE',
-            url: `/api/dio/accounts/${id}`,
-            params: params
+            url: `/api/dio/accounts/${id}`
         })
     }
 }
