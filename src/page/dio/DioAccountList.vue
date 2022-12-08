@@ -103,7 +103,7 @@
                     extra: ''
                 },
                 isDialogVisible: false,
-                accountForm: {...this.emptyAccount},
+                accountForm: this.$utils.copyObject(this.emptyAccount),
                 isDeleteDialogVisible: false,
                 deletingId: null
             }
@@ -185,15 +185,15 @@
             },
             onEditClick(account) {
                 console.log(account)
-                this.accountForm = {...account}
+                this.accountForm = this.$utils.copyObject(account)
                 this.isDialogVisible = true
             },
             onAddClick() {
-                this.accountForm = {...this.emptyAccount}
+                this.accountForm = this.$utils.copyObject(this.emptyAccount)
                 this.isDialogVisible = true
             },
             onDialogClose() {
-                this.accountForm = {...this.emptyAccount}
+                this.accountForm = this.$utils.copyObject(this.emptyAccount)
             },
             onCancelClick() {
                 this.isDialogVisible = false

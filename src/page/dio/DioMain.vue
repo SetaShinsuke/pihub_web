@@ -235,7 +235,7 @@
                 emptyAcq: {
                     id: null,
                     item_type: 'Game',
-                    item: {...this.emptyGame},
+                    item: this.$utils.copyObject(this.emptyGame),
                     account_id: null,
                     acq_method: null,
                     acq_from: null,
@@ -246,7 +246,7 @@
                     region: null,
                     state: 'undecided'
                 },
-                acqForm: {...this.emptyAcq},
+                acqForm: this.$utils.copyObject(this.emptyAcq),
                 currency: 'CNY'
             }
         },
@@ -293,19 +293,19 @@
             },
             onEditClick(acquisition) {
                 console.log('Edit: ' + acquisition.id)
-                this.acqForm = {...acquisition}
+                this.acqForm = this.$utils.copyObject(acquisition)
                 this.dialogVisible = true
             },
             onGameSelect(gameId) {
                 alert(gameId)
                 this.games.forEach(game => {
                     if (game.id === gameId) {
-                        this.acqForm.item = {...game}
+                        this.acqForm.item = this.$utils.copyObject(game)
                     }
                 })
             },
             onAddClick() {
-                this.acqForm = {...this.emptyAcq}
+                this.acqForm = this.$utils.copyObject(this.emptyAcq)
                 this.dialogVisible = true
             },
             onDialogOpen() {
@@ -313,7 +313,7 @@
                 this.loadGames()
             },
             onDialogClose() {
-                this.acqForm = {...this.emptyAcq}
+                this.acqForm = this.$utils.copyObject(this.emptyAcq)
             },
             onCancelClick() {
                 this.dialogVisible = false

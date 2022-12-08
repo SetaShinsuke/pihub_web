@@ -1,5 +1,3 @@
-var i = 0
-console.log(i+=1)
 import {createApp} from 'vue'
 import App from './App.vue'
 import ElementPlus from 'element-plus'
@@ -18,7 +16,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 // app.component('ArrowDown', ArrowDown)
 
-console.log(i+=1)
 app.config.globalProperties.$filters = {
     toRmb(cents, fix = 2) {
         if (cents == null) {
@@ -33,7 +30,16 @@ app.config.globalProperties.$filters = {
     }
 }
 
-console.log(i+=1)
+app.config.globalProperties.$utils = {
+    copyObject(obj){
+        if(!obj){
+            return {}
+        }
+        // return {...obj}
+        return JSON.parse(JSON.stringify(obj))
+    }
+}
+
 app.mount('#app')
 
 // const { DateTime } = require("luxon");
