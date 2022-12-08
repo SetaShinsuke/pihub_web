@@ -10,7 +10,7 @@ import BookScanParser from "@/page/util_pages/BookScanParser.vue";
 import DioMain from "@/page/dio/DioMain.vue";
 import DioSearch from "@/page/dio/DioSearch.vue";
 import DioAccountList from "@/page/dio/DioAccountList.vue";
-import DioGames from "@/page/dio/DioGames.vue";
+import DioGameList from "@/page/dio/DioGameList.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -53,7 +53,7 @@ const router = createRouter({
         },
         {
           path: '/dio/games',
-          component: DioGames
+          component: DioGameList
         },
         {
             path: '/dio/search',

@@ -8,7 +8,7 @@
                 <el-table-column label="ID" prop="id" align="center"/>
                 <el-table-column label="封面" align="center">
                     <template #default="scope">
-                        <el-image style="height: 120px" :src="scope.row.cover_url"></el-image>
+                        <el-image style="height: 120px" :fit="contain" :src="scope.row.cover_url"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column label="SKU" prop="sku" align="center"/>
@@ -37,7 +37,7 @@
     import {GameApi} from "@/api.js";
 
     export default {
-        name: "DioGames",
+        name: "DioGameList",
         data(){
             return{
                 games: [],

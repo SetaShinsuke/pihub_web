@@ -205,7 +205,6 @@
                     this.addAccount()
                 }
             }
-
         },
         mounted() {
             this.loadAccounts()
