@@ -166,7 +166,6 @@
                 this.search(this.searchText)
             },
             onSearchClose(done) {
-                // todo: 检查输入框是否为空
                 if(!this.searchText){
                     done()
                     return

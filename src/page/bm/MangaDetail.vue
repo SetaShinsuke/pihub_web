@@ -12,18 +12,40 @@
     </div>
     <!-- 章节目录 -->
     <div class="main-content" style="text-align: center">
-        <div class="ep_item" v-for="ep in epList" :key="ep.ep_id">
-            <el-link class="ep_btn" :title="ep.ep_name"
-                     :underline="false"
-                     :href="getEpUrl(ep)">
-                {{ep.ep_name}}
-            </el-link>
+        <div v-show="!isInBatch">
+            <div class="ep_item" style="display: inline-block" v-for="ep in epList" :key="ep.ep_id">
+                <el-link class="ep_btn" :title="ep.ep_name"
+                         :underline="false"
+                         :href="getEpUrl(ep)">
+                    {{ep.ep_name}}
+                </el-link>
+            </div>
         </div>
+        <div v-show="isInBatch">
+            <el-checkbox-group v-model="checkedEps" @change="handleCheck">
+                <el-checkbox class="ep_item" v-for="ep in epList" border
+                             :title="ep.ord" :key="ep.ep_id" :label="ep.short_title">
+                    {{ep.ep_name}}
+                </el-checkbox>
+            </el-checkbox-group>
+        </div>
+    </div>
+    <!-- 批量操作 -->
+    <div class="do-batch" style="margin-bottom: 12px">
+        <el-button round @click="handleBatchClick">{{isInBatch?"取消批量操作":"批量操作"}}</el-button>
+        <el-button round @click="checkVolHeads">显示卷首</el-button>
+        <el-button v-if="isInBatch"
+                   round @click="setVolHeads('add')">添加卷首
+        </el-button>
+        <el-button v-if="isInBatch"
+                   round @click="setVolHeads('set')">设置卷首
+        </el-button>
     </div>
 </template>
 
 <script>
-    import {MangaApi} from "@/api.js";
+    import {HOST, MangaApi} from "@/api.js";
+    import {ElMessage} from "element-plus";
 
     export default {
         name: "MangaDetail",
@@ -34,7 +56,9 @@
                 mangaIntro: '',
                 coverUrl: '',
                 authors: [],
-                epList: []
+                epList: [],
+                checkedEps: [],
+                isInBatch: false
             }
         },
         methods: {
@@ -52,6 +76,29 @@
             getEpUrl(ep) {
                 var path = `/manga/${this.mangaId}/ep/${ep.ep_id}/replies?ep_name=${ep.ep_name}`
                 return (window.location.href + '').replace(/\/#.*/, '/#' + path)
+            },
+            setVolHeads(_mode) {
+                var mode = _mode
+                if(this.checkedEps.length === 0){
+                    mode = 'clear'
+                }
+                MangaApi.setVolHeads(this.mangaId, this.checkedEps, mode).then(resp => {
+                    console.log(resp.data.vol_heads)
+                    ElMessage({
+                        message: '卷首已设置!',
+                        type: 'success'
+                    })
+                })
+            },
+            handleBatchClick() {
+                this.checkedEps = [];
+                this.isInBatch = !this.isInBatch
+            },
+            handleCheck() {
+                console.log(this.checkedEps)
+            },
+            checkVolHeads(){
+                window.open(`${HOST}/api/bm/${this.mangaId}/vol_heads`, '_blank')
             }
         },
         mounted() {
@@ -90,18 +137,21 @@
     }
 
     .ep_item {
-        display: inline-block;
+        /*display: inline-block;*/
         width: 150px;
         max-width: 150px;
         margin: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .ep_btn {
-        display: inline;
+        /*display: inline;*/
         width: 130px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        text-align: center;
         float: left;
     }
 </style>

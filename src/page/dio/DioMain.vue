@@ -63,6 +63,7 @@
                                    icon="Edit"/>
                         <el-button circle size="small" @click="onDeleteClick(scope.row.id)"
                                    icon="Delete"/>
+                        <!-- todo: 修改状态 -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -98,7 +99,7 @@
         <el-dialog :title="getDialogTitle()" v-model="dialogVisible"
                    @open="onDialogOpen"
                    @closed="onDialogClose" :close-on-click-modal="false"
-                   style="width: 80%; max-width: 800px">
+                   style="width: 90%; max-width: 700px">
             <el-form :model="acqForm" label-position="right" v-if="acqForm"
                      label-width="auto">
                 <el-form-item label="ID:" v-if="acqForm.id">
@@ -123,7 +124,7 @@
                 </el-form-item>
                 <el-form-item label="游戏ID:">
                     <el-select v-model="acqForm.item.id" clearable placeholder="添加游戏"
-                               :change="onGameSelect">
+                               @change="onGameSelect">
                         <el-option
                                 v-for="game in games"
                                 :title="game.name" :label="game.name"
@@ -133,6 +134,9 @@
                 </el-form-item>
                 <el-form-item label="游戏名称:">
                     <el-input v-model="acqForm.item.name" style="width: 80%" auto-complete="off"/>
+                </el-form-item>
+                <el-form-item label="游戏原名:">
+                    <el-input v-model="acqForm.item.org_name" style="width: 80%" auto-complete="off"/>
                 </el-form-item>
                 <el-form-item label="SKU:">
                     <el-input v-model="acqForm.item.sku" style="width: 80%" auto-complete="off"/>
@@ -158,10 +162,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="获取来源:">
-                    <el-input v-model="acqForm.acq_from" style="width: 100%"
+                    <el-input v-model="acqForm.acq_from" style="width: 60%"
                               auto-complete="off"/>
                 </el-form-item>
-                <el-form-item label="获取价格/原价:">
+                <el-form-item label="价格/原价:">
                     <el-row style="width: 100%" :gutter="10" justify="space-between">
                         <el-col :span="7">
                             <el-select v-model="currency" style="width: 100%" placeholder="币种">
@@ -172,19 +176,38 @@
                             </el-select>
                         </el-col>
                         <el-col :span="8">
-                            <el-input-number v-model="acqForm.acq_price"
-                                             :controls="false"
+                            <el-input-number :model-value="acqForm.acq_price/100"
+                                             @change="(newVal, oldVal) => {acqForm.acq_price = newVal*100}"
+                                             :controls="false" placeholder="获取价格"
+                                             :precision="2" :step="1"
                                              style="width: 100%;"/>
                         </el-col>
                         <el-col :span="1">
                             <span>/</span>
                         </el-col>
                         <el-col :span="8">
-                            <el-input-number v-model="acqForm.org_price"
-                                             :controls="false"
+                            <el-input-number :model-value="acqForm.org_price/100"
+                                             @change="(newVal, oldVal) => {acqForm.org_price = newVal*100}"
+                                             :controls="false" placeholder="原价"
+                                             :precision="2" :step="1"
                                              style="width: 100%;"/>
                         </el-col>
                     </el-row>
+                </el-form-item>
+                <el-form-item label="形式:">
+                    <el-radio-group v-model="acqForm.media_format" size="small">
+                        <el-radio label="digital" name="数字版"/>
+                        <el-radio label="physical" name="实体版"/>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="区服:">
+                    <el-select v-model="acqForm.region" placeholder="选择区服"
+                               filterable allow-create default-first-option>
+                        <el-option
+                                v-for="item in ['NONE', 'CN', 'HK', 'JP', 'US', 'MX', 'AF'].reverse()"
+                                :key="item" :value="item"
+                        />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="获取日期:">
                     <el-date-picker
@@ -203,8 +226,8 @@
 </template>
 
 <script>
-    import {AcqApi, DioApi, GameApi} from "@/api.js";
-    import {ElMessage} from "element-plus";
+    import {AcqApi, DioApi, GameApi, UtilsApi} from "@/api.js";
+    import {ElMessage, ElMessageBox} from "element-plus";
 
     export default {
         name: "DioMain",
@@ -239,10 +262,11 @@
                     account_id: null,
                     acq_method: null,
                     acq_from: null,
+                    acq_date: null,
                     acq_price: null,
                     org_price: null,
                     extra: '',
-                    format: 'digital',
+                    media_format: 'digital',
                     region: null,
                     state: 'undecided'
                 },
@@ -251,6 +275,7 @@
             }
         },
         methods: {
+            // region: APIs
             loadAcqCount() {
                 AcqApi.getAcqs({count: true}).then(resp => {
                     this.total = resp.data.acquisitions
@@ -281,6 +306,42 @@
                     }
                 })
             },
+            addAcquisition(args){
+                AcqApi.addAcq(args).then(resp => {
+                    console.log(resp.data)
+                    if (resp.data.acquisition) {
+                        ElMessage({
+                            message: '记录已添加!',
+                            type: 'success'
+                        })
+                        this.dialogVisible = false
+                        this.loadAcquisitions()
+                    } else {
+                        ElMessage({
+                            message: '交易添加失败, 请重试!',
+                            type: 'error'
+                        })
+                    }
+                })
+            },
+            editAcquisitions(acqId, args){
+                AcqApi.editAcq(acqId, args).then(resp => {
+                    console.log(resp.data)
+                    if (resp.data.acquisition) {
+                        ElMessage({
+                            message: '记录已修改!',
+                            type: 'success'
+                        })
+                        this.dialogVisible = false
+                        this.loadAcquisitions()
+                    } else {
+                        ElMessage({
+                            message: '交易修改失败, 请重试!',
+                            type: 'error'
+                        })
+                    }
+                })
+            },
             loadAccounts() {
                 DioApi.getAccounts().then(resp => {
                     this.accounts = resp.data.accounts
@@ -291,13 +352,13 @@
                     this.games = resp.data.games
                 })
             },
+            // endregion
             onEditClick(acquisition) {
                 console.log('Edit: ' + acquisition.id)
                 this.acqForm = this.$utils.copyObject(acquisition)
                 this.dialogVisible = true
             },
             onGameSelect(gameId) {
-                alert(gameId)
                 this.games.forEach(game => {
                     if (game.id === gameId) {
                         this.acqForm.item = this.$utils.copyObject(game)
@@ -314,18 +375,52 @@
             },
             onDialogClose() {
                 this.acqForm = this.$utils.copyObject(this.emptyAcq)
+                this.currency = 'CNY'
             },
             onCancelClick() {
                 this.dialogVisible = false
             },
             onConfirmClick() {
                 console.log(this.acqForm)
-                // todo: 算汇率
-                // if (this.acqForm.id) {
-                //     this.editAccount()
-                // } else {
-                //     this.addAccount()
-                // }
+                // 1. 创建游戏；2.算汇率
+                var callback = (resp)=>{
+                    if(resp.data.game){
+                        this.acqForm.item_id = resp.data.game.id
+                        // 算汇率
+                        var crcCallback = (rate) => {
+                            this.acqForm.acq_price = parseInt(this.acqForm.acq_price / rate)
+                            this.acqForm.org_price = parseInt(this.acqForm.org_price / rate)
+
+                            if(this.acqForm.id){
+                                this.editAcquisitions(this.acqForm.id, this.acqForm)
+                            }else {
+                                this.addAcquisition(this.acqForm)
+                                // todo: routes 刷新掉 /new
+                            }
+                        }
+                        if(this.currency ==='CNY'){
+                            crcCallback(1)
+                        }else {
+                            UtilsApi.getExchangeRate().then(crcResp =>{
+                                let rates = crcResp.data.rates
+                                crcCallback(rates[this.currency])
+                            })
+                        }
+                    }else {
+                        ElMessageBox.alert('游戏编辑失败!', '提示', {
+                            // if you want to disable its autofocus
+                            // autofocus: false,
+                            type: 'error',
+                            confirmButtonText: '确定',
+                        })
+                    }
+                }
+                let gameId = this.acqForm.item?.id
+                if(gameId){
+                    GameApi.editGame(gameId, this.acqForm.item).then(callback)
+                }else {
+                    GameApi.addGame(this.acqForm.item).then(callback)
+                }
             },
             onDeleteClick(id) {
                 this.deletingId = id
@@ -354,7 +449,32 @@
         },
         mounted() {
             this.loadAcquisitions()
-            this.onAddClick()
+            // this.onAddClick()
+            if(/\/new/.test(this.$route.path)){
+                this.onAddClick()
+                // 根据 query 填选表单
+                let query = this.$route.query
+                if(query.sku) this.acqForm.item.sku = query.sku
+                if(query.platform) this.acqForm.item.platform = query.platform
+                if(query.name) this.acqForm.item.name = query.name
+                if(query.org_name) this.acqForm.item.org_name = query.org_name
+                if(query.account_id) this.acqForm.account_id = query.account_id
+                if(query.acq_method) this.acqForm.acq_method = query.acq_method
+                if(query.acq_from) this.acqForm.acq_from = query.acq_from
+                if(query.acq_date) this.acqForm.acq_date = query.acq_date
+                if(query.currency) this.currency = query.currency
+                if(query.acq_price) this.acqForm.acq_price = query.acq_price
+                if(query.org_price) this.acqForm.org_price = query.org_price
+                if(query.extra) this.acqForm.extra = query.extra
+                if(query.media_format) this.acqForm.media_format = query.media_format
+                if(query.region) this.acqForm.region = query.region
+                if(query.state) this.acqForm.state = query.state
+            }
+        },
+        unmounted() {
+            this.acqForm = null
+            this.emptyAcq = null
+            this.emptyGame = null
         }
     }
 </script>

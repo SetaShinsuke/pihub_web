@@ -75,7 +75,7 @@ export class MangaApi {
         }
         return instance.request({
             method: 'GET',
-            url: '/api/bm_reply?ep_id=' + epId,
+            url: '/api/bm/replies?ep_id=' + epId,
             params: params
         })
     }
@@ -84,6 +84,26 @@ export class MangaApi {
         return instance.request({
             method: 'GET',
             url: `/api/bm/${mangaId}`
+        })
+    }
+
+    static getVolHeads(mangaId){
+        return instance.request({
+            method: 'GET',
+            url: `/api/bm/${mangaId}/vol_heads`
+        })
+    }
+
+    static setVolHeads(mangaId, shortTitles, mode = 'set'){
+        console.log('---')
+        console.log(shortTitles)
+        return instance.request({
+            method: 'GET',
+            url: `/api/bm/${mangaId}/vol_heads`,
+            params: {
+                short_titles: shortTitles,
+                mode: mode
+            }
         })
     }
 }
@@ -119,7 +139,7 @@ export class GameApi {
     static addGame(args) {
         let params = {}
         if (args) {
-            ['sku', 'platform', 'org_name', 'name', 'cover', 'hl2b_id'].forEach(key => {
+            ['sku', 'platform', 'org_name', 'name', 'cover_url', 'hl2b_id'].forEach(key => {
                 if (key in args) params[key] = args[key]
             })
         }
@@ -140,7 +160,7 @@ export class GameApi {
     static editGame(gameId, args) {
         let params = {}
         if (args) {
-            ['sku', 'platform', 'org_name', 'name', 'cover', 'hl2b_id'].forEach(key => {
+            ['sku', 'platform', 'org_name', 'name', 'cover_url', 'hl2b_id'].forEach(key => {
                 if (key in args) params[key] = args[key]
             })
         }
@@ -163,7 +183,7 @@ export class AcqApi {
     static getAcqs(args) {
         let params = {}
         if (args) {
-            ['account_id', 'item_id', 'item_type', 'format', 'state', 'region', 'extra',
+            ['account_id', 'item_id', 'item_type', 'media_format', 'state', 'region', 'extra',
                 'price_min', 'price_max', 'price_type', 'date_start', 'date_end',
                 'all', 'count', 'limit', 'page'].forEach(key => {
                 if (key in args) params[key] = args[key]
@@ -179,8 +199,8 @@ export class AcqApi {
     static addAcq(args) {
         let params = {}
         if (args) {
-            ['account_id', 'item_id', 'item_type', 'format',
-                'acq_price', 'org_price', 'acq_method', 'acq_from',
+            ['account_id', 'item_id', 'item_type', 'media_format',
+                'acq_price', 'org_price', 'acq_method', 'acq_from', 'acq_date',
                 'state', 'region', 'extra'].forEach(key => {
                 if (key in args) params[key] = args[key]
             })
@@ -202,8 +222,8 @@ export class AcqApi {
     static editAcq(acqId, args) {
         let params = {}
         if (args) {
-            ['account_id', 'item_id', 'format',
-                'acq_price', 'org_price', 'acq_method', 'acq_from',
+            ['account_id', 'item_id', 'media_format',
+                'acq_price', 'org_price', 'acq_method', 'acq_from', 'acq_date',
                 'state', 'region', 'extra'].forEach(key => {
                 if (key in args) params[key] = args[key]
             })
@@ -265,6 +285,18 @@ export class DioApi {
         return instance.request({
             method: 'DELETE',
             url: `/api/dio/accounts/${id}`
+        })
+    }
+}
+
+export class UtilsApi {
+    static getExchangeRate(source = 'CNY'){
+        return instance.request({
+            method: 'GET',
+            url: '/api/utils/exchange_rate',
+            params: {
+                source: source
+            }
         })
     }
 }

@@ -52,6 +52,10 @@ const router = createRouter({
             component: DioMain
         },
         {
+            path: '/dio/main/new',
+            component: DioMain
+        },
+        {
           path: '/dio/games',
           component: DioGameList
         },
